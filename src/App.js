@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import Login, { NotVerified } from "./components/Login";
+import Login from "./components/Login";
+import Form from './components/Form'
 import {
   BrowserRouter as Router,
   Switch,
@@ -25,6 +26,9 @@ export default class App extends Component {
               <li>
                 <Link to="/admin">Admin</Link>
               </li>
+              <li>
+                <Link to="/form">Form</Link>
+              </li>
             </ul>
           </nav>
           <Switch>
@@ -34,8 +38,8 @@ export default class App extends Component {
             <Route path="/login">
               <Login />
             </Route>
-            <Route path="/verification">
-              <NotVerified/>
+            <Route path="/form">
+              <Form />
             </Route>
             <PrivateRoute path="/" />
             <PrivateRoute path="/admin" />
@@ -46,5 +50,5 @@ export default class App extends Component {
   }
 }
 
-const PrivateRoute = () => (hasSignIn() && isVerified()) ? <Redirect to="/home"/> : <Redirect to="/login" />;
-
+const PrivateRoute = () =>
+  (hasSignIn() && isVerified()) ? <Form /> : <Redirect to="/login" />;
