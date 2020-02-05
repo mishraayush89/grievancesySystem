@@ -1,29 +1,33 @@
-import * as functions from 'firebase-functions';
+import  * as functions  from 'firebase-functions'
+import * as admin from 'firebase-admin'
 
-import algoliasearch from 'algoliasearch'
+admin.initializeApp()
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-const ALGOLIA_ID = functions.config().algolia.app_id;
-const ALGOLIA_ADMIN_KEY = functions.config().algolia.api_key;
-const ALGOLIA_SEARCH_KEY = functions.config().algolia.search_key;
+const env = functions.config()
 
-const ALGOLIA_INDEX_NAME = 'grivances';
-const client = algoliasearch("YWT0AXGUS5", "0f8a3e6e7c9358728d3c98440fed5371");
+const algoliasearch =  require('algoliasearch');
 
-exports.onGrivancesCreated = functions.firestore.document('notes/{noteId}').onCreate((snap, context) => {
-    // Get the note document
-    const note = snap.data();
-  
-    // Add an 'objectID' field which Algolia requires
-    note.objectID = context.params.noteId;
-  
-    // Write to the algolia index
-    const index = client.initIndex(ALGOLIA_INDEX_NAME);
-    return index.saveObject(note);
-  });
-  
+const client = algoliasearch(env.algolia.appid, env.algolia.apikey);
+const index = client.initIndex('grivances');
+
+exports.indexGrivances = functions.firestore
+  .document('grievance/{grievanceId}')
+  .onCreate((snap, context) => {
+    const data = snap.data();
+    const objectID = snap.id;
+
+    // Add the data to the algolia index
+    return index.saveObject({
+      objectID,
+      ...data
+    });
+});
+
+exports.unindexGrievance = functions.firestore
+  .document('grivances/{grievanceId}')
+  .onDelete((snap, context) => {
+    const objectId = snap.id;
+
+    // Delete an ID from the index
+    return index.deleteObject(objectId);
+});
