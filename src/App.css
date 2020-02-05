@@ -9,7 +9,7 @@ html {
 body {
   height: 100%;
   width: 100%;
-  background: linear-gradient(#f8939d, #a64760);
+  background: #ffd;
   display: flex;
   align-items: center;
   justify-content: center;

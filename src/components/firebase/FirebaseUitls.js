@@ -99,11 +99,8 @@ export function createGrievance(item) {
     .doc();
   const data = {
     id: doc.id,
-    usn: item.usn,
-    title: item.title,
-    email: item.email,
-    message: item.message,
-    createdAt: Timestamp.now()
+    ...item,
+    createdAt: Date.now()
   };
   return doc.set(data);
 }
