@@ -35,6 +35,7 @@ export default class App extends Component {
               <Login />
             </Route>
             <PrivateRoute path="/" />
+            <PrivateRoute path="/admin" />
           </Switch>
         </Router>
       </div>
@@ -42,5 +43,5 @@ export default class App extends Component {
   }
 }
 
-const PrivateRoute = () =>
-  (hasSignIn() && isVerified()) ? <div /> : <Redirect to="/login" />;
+const PrivateRoute = () => (hasSignIn() && isVerified()) ? <></> : <Redirect to="/login" />;
+
