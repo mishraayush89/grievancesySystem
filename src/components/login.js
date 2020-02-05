@@ -5,9 +5,12 @@ import {
   hasSignIn,
   isVerified,
   sendVerificationLink,
-  signUp
+  signUp,
+  getEmail
 } from "./firebase/FirebaseUitls";
 import "../App.css";
+import firebase from "@firebase/app";
+import { Redirect, Link } from "react-router-dom";
 
 function Signup() {
   return (
@@ -25,15 +28,15 @@ function Signup() {
         return errors;
       }}
       onSubmit={async (values, { setSubmitting }) => {
-        const error = {}
+        const error = {};
         setSubmitting(true);
+        console.log("clicked");
         if (!hasSignIn()) {
           console.log(values.email, values.password);
           await signUp(values.email, values.password)
             .catch(function(err) {
               var errorCode = err.code;
               var errorMessage = err.message;
-              
             })
             .then(() => {
               if (!isVerified()) {
@@ -113,94 +116,140 @@ function Signup() {
   );
 }
 
-function Signin() {
-  return (
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      validate={values => {
-        const errors = {};
-        if (!values.password) {
-          errors.password = "Required";
-        }
-        if (!values.email) {
-          errors.email = "Required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-          errors.email = "Invalid email address";
-        }
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting
-        /* and other goodies */
-      }) => (
-        <form>
-          <div className="form-row">
+class Signin extends Component {
+  state = {
+    loggedin: hasSignIn(),
+    verified: isVerified()
+  };
+
+  render() {
+    const { loggedin, verified } = this.state;
+    return loggedin && !verified ? (
+      <Redirect to="/verification" />
+    ) : loggedin && verified ? (
+      <Redirect to="/home" />
+    ) : (
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validate={values => {
+          const errors = {};
+          if (!values.password) {
+            errors.password = "Required";
+          }
+          if (!values.email) {
+            errors.email = "Required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          ) {
+            errors.email = "Invalid email address";
+          }
+          return errors;
+        }}
+        onSubmit={async (values, { setSubmitting }) => {
+          const error = {};
+          setSubmitting(true);
+          console.log(values.email, values.password);
+          await signIn(values.email, values.password).catch(function(err) {
+            var errorCode = err.code;
+            var errorMessage = err.message;
+            // TODO: replace alert with state text
+            alert(errorCode, errorMessage);
+          });
+          this.setState({
+            loggedin: hasSignIn(),
+            verified: isVerified()
+          });
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting
+          /* and other goodies */
+        }) => (
+          <form>
             <div className="form-row">
-              <label>E-MAIL</label>
+              <div className="form-row">
+                <label>E-MAIL</label>
+                <input
+                  className="input-box"
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                />
+                {errors.email && touched.email && errors.email}
+              </div>
+              <label>PASSWORD</label>
               <input
                 className="input-box"
-                type="email"
-                name="email"
+                type="password"
+                name="password"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.email}
+                value={values.password}
               />
-              {errors.email && touched.email && errors.email}
+              {errors.password && touched.password && errors.password}
             </div>
-            <label>PASSWORD</label>
-            <input
-              className="input-box"
-              type="password"
-              name="password"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.password}
-            />
-            {errors.password && touched.password && errors.password}
-          </div>
-          <button
-            type="submit"
-            className="bottom-button"
-            disabled={isSubmitting}
-          >
-            Sign in
-          </button>
-          <a className="already-member">Not a member?</a>
-        </form>
-      )}
-    </Formik>
-  );
+            <button
+              type="submit"
+              className="bottom-button"
+              disabled={isSubmitting}
+              onClick={e => {
+                console.log(e);
+                handleSubmit();
+              }}
+            >
+              Sign in
+            </button>
+            <a className="already-member">Not a member?</a>
+          </form>
+        )}
+      </Formik>
+    );
+  }
 }
 
+export class NotVerified extends Component {
+  state = {
+    loggedin: hasSignIn(),
+    verified: isVerified()
+  };
+  render() {
+    const { loggedin, verified } = this.state;
+    return !loggedin ? (
+      <Redirect to="/login"></Redirect>
+    ) : (
+      <div>
+        You are not verified.
+        <Link
+          to="#"
+          onClick={e => {
+            sendVerificationLink();
+          }}
+        >
+          Send Verification
+        </Link>
+      </div>
+    );
+  }
+}
 
-function Login() {
+export default function Login() {
   const [signup, isSignup] = useState(false);
   const handleChange = state => isSignup(state);
+  const verified = isVerified();
+  const authenticated = hasSignIn();
+  console.log(authenticated);
   return (
     <div>
       <main style={{ marginTop: "100px" }}>
         <section className="left">
-          <div className="logo">
-            <img
-              className="beer"
-              src="https://image.iccpic.com/previews/d2/8b/5d/45ea07370ad9ce0f.svg"
-            />
-          </div>
           <h2 className="subheading">Student Grievence Cell</h2>
           <img className="rocket" src="student.png" />
           <h2 className="subheading">We are here to help!</h2>
@@ -244,12 +293,16 @@ function Login() {
                 Sign Up
               </a>
             </nav>
-            {signup ? <Signup /> : <Signin />}
+            {authenticated && !verified ? (
+              <Redirect to="/verification" />
+            ) : signup ? (
+              <Signup />
+            ) : (
+              <Signin />
+            )}
           </section>
         </section>
       </main>
     </div>
   );
 }
-
-export default Login;

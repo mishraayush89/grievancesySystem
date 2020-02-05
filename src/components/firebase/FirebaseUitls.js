@@ -25,6 +25,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 // Types of categories
 export const CATEGORY = {
@@ -67,23 +68,27 @@ export function hasSignIn() {
   return firebase.auth().currentUser !== null;
 }
 
+export function getEmail() {
+  return firebase.auth().currentUser.email;
+}
+
 // returns boolean value
 export function isVerified() {
-  if(firebase.auth().currentUser === undefined || firebase.auth().currentUser === null) return false
+  if (
+    firebase.auth().currentUser === undefined ||
+    firebase.auth().currentUser === null
+  )
+    return false;
   return firebase.auth().currentUser.emailVerified;
 }
 
 // returns promise without catch or check ie. it doesn't check if user is
 // already verified or not
-export function sendVerificationLink(email) {
-  var obj = {
-    android: null,
-    handleCodeInApp: false,
-    iOS: null,
-    url: "",
-    dynamicLinkDomain: null
-  };
-  return firebase.auth().sendSignInLinkToEmail(email, obj);
+export function sendVerificationLink() {
+  return firebase
+    .auth()
+    .currentUser
+    .sendEmailVerification();
 }
 
 // create grievance
@@ -110,4 +115,17 @@ export function deleteGrievance(id) {
     .collection("grievance")
     .doc(id)
     .delete();
+}
+
+// returns a promise
+export function signOut() {
+  return firebase.auth().signOut();
+}
+
+// return on snapshot function
+export function listAllGrievance() {
+  return firebase
+    .firestore()
+    .collection("grievance")
+    .limit(200).onSnapshot;
 }
