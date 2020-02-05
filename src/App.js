@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Login from "./components/Login";
+import Form from './components/Form'
 import {
   BrowserRouter as Router,
   Switch,
@@ -25,6 +26,9 @@ export default class App extends Component {
               <li>
                 <Link to="/admin">Admin</Link>
               </li>
+              <li>
+                <Link to="/form">Form</Link>
+              </li>
             </ul>
           </nav>
           <Switch>
@@ -33,6 +37,9 @@ export default class App extends Component {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/form">
+              <Form />
             </Route>
             <PrivateRoute path="/" />
           </Switch>
@@ -43,4 +50,4 @@ export default class App extends Component {
 }
 
 const PrivateRoute = () =>
-  (hasSignIn() && isVerified()) ? <div /> : <Redirect to="/login" />;
+  (hasSignIn() && isVerified()) ? <Form /> : <Redirect to="/login" />;
