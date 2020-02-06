@@ -10,8 +10,9 @@ import {
 } from "../firebase/FirebaseUitls";
 import "../App.css";
 import { Redirect, Link } from "react-router-dom";
+import firebase from "@firebase/app";
 
-function Signup() {
+function Signup(props) {
   return (
     <Formik
       initialValues={{ username: "", email: "", password: "" }}
@@ -29,7 +30,6 @@ function Signup() {
       onSubmit={async (values, { setSubmitting }) => {
         const error = {};
         setSubmitting(true);
-        console.log("clicked");
         if (!hasSignIn()) {
           console.log(values.email, values.password);
           await signUp(values.email, values.password)
@@ -41,6 +41,7 @@ function Signup() {
               if (!isVerified()) {
                 sendVerificationLink();
                 setSubmitting(false);
+                props.onSubmit();
               }
             });
         }
@@ -116,18 +117,12 @@ function Signup() {
 }
 
 class Signin extends Component {
-  state = {
-    loggedin: hasSignIn(),
-    verified: isVerified()
-  };
+  constructor(props) {
+    super(props);
+  }
 
   render() {
-    const { loggedin, verified } = this.state;
-    return loggedin && !verified ? (
-      <Redirect to="/verification" />
-    ) : loggedin && verified ? (
-      <Redirect to="/home" />
-    ) : (
+    return (
       <Formik
         initialValues={{ email: "", password: "" }}
         validate={values => {
@@ -147,17 +142,16 @@ class Signin extends Component {
         onSubmit={async (values, { setSubmitting }) => {
           const error = {};
           setSubmitting(true);
-          console.log(values.email, values.password);
-          await signIn(values.email, values.password).catch(function(err) {
-            var errorCode = err.code;
-            var errorMessage = err.message;
-            // TODO: replace alert with state text
-            alert(errorCode, errorMessage);
-          });
-          this.setState({
-            loggedin: hasSignIn(),
-            verified: isVerified()
-          });
+          signIn(values.email, values.password)
+            .catch(function(err) {
+              var errorCode = err.code;
+              var errorMessage = err.message;
+              // TODO: replace alert with state text
+              alert(errorCode, errorMessage);
+            })
+            .then(() => {
+              this.props.onSubmit();
+            });
         }}
       >
         {({
@@ -200,8 +194,7 @@ class Signin extends Component {
               className="bottom-button"
               disabled={isSubmitting}
               onClick={e => {
-                console.log(e);
-                handleSubmit();
+                handleSubmit(e);
               }}
             >
               Sign in
@@ -239,69 +232,92 @@ export class NotVerified extends Component {
   }
 }
 
-export default function Login() {
-  const [signup, isSignup] = useState(false);
-  const handleChange = state => isSignup(state);
-  const verified = isVerified();
-  const authenticated = hasSignIn();
-  console.log(authenticated);
-  return (
-    <div>
-      <main style={{ marginTop: "100px" }}>
-        <section className="left">
-          <h2 className="subheading">Student Grievence Cell</h2>
-          <img className="rocket" src="student.png" />
-          <h2 className="subheading">We are here to help!</h2>
-        </section>
-        <section className="right">
-          <section className="form">
-            <div className="top-signup">
-              <button
-                className={signup ? "signup" : "signin"}
-                onClick={() => {
-                  handleChange(false);
-                }}
-              >
-                Sign In
-              </button>
-              <button
-                className={!signup ? "signup" : "signin"}
-                onClick={() => {
-                  handleChange(!false);
-                }}
-              >
-                Sign Up
-              </button>
-            </div>
-            <nav>
-              <a
-                className={!signup ? "term-service" : ""}
-                onClick={() => {
-                  handleChange(false);
-                }}
-              >
-                Sign In
-              </a>{" "}
-              <span>or</span>{" "}
-              <a
-                className={signup ? "term-service" : ""}
-                onClick={() => {
-                  handleChange(!false);
-                }}
-              >
-                Sign Up
-              </a>
-            </nav>
-            {authenticated && !verified ? (
-              <Redirect to="/verification" />
-            ) : signup ? (
-              <Signup />
-            ) : (
-              <Signin />
-            )}
-          </section>
-        </section>
-      </main>
-    </div>
-  );
+export default class Login extends Component {
+  state = {
+    signup: false,
+    authenticated: hasSignIn(),
+    verified: isVerified()
+  };
+  render() {
+    const { signup, authenticated, verified } = this.state;
+    if (authenticated && verified) {
+      return <Redirect to="/dash" />;
+    } else if (authenticated && !verified) {
+      return <Redirect to="/verify" />;
+    } else {
+      return (
+        <div>
+          <main style={{ marginTop: "100px" }}>
+            <section className="left">
+              <h2 className="subheading">Student Grievence Cell</h2>
+              <img className="rocket" src="student.png" />
+              <h2 className="subheading">We are here to help!</h2>
+            </section>
+            <section className="right">
+              <section className="form">
+                <div className="top-signup">
+                  <button
+                    className={!signup ? "signup" : "signin"}
+                    onClick={() => {
+                      this.setState({ signup: false });
+                    }}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    className={signup ? "signup" : "signin"}
+                    onClick={() => {
+                      this.setState({ signup: !false });
+                    }}
+                  >
+                    Sign Up
+                  </button>
+                </div>
+                <nav>
+                  <a
+                    className={!signup ? "term-service" : ""}
+                    onClick={() => {
+                      this.setState({ signup: false });
+                    }}
+                  >
+                    Sign In
+                  </a>{" "}
+                  <span>or</span>{" "}
+                  <a
+                    className={signup ? "term-service" : ""}
+                    onClick={() => {
+                      this.setState({ signup: !false });
+                    }}
+                  >
+                    Sign Up
+                  </a>
+                </nav>
+                {authenticated && !verified ? (
+                  <Redirect to="/verification" />
+                ) : signup ? (
+                  <Signup
+                    onSubmit={() => {
+                      this.setState({
+                        authenticated: hasSignIn(),
+                        verified: isVerified()
+                      });
+                    }}
+                  />
+                ) : (
+                  <Signin
+                    onSubmit={() => {
+                      this.setState({
+                        authenticated: hasSignIn(),
+                        verified: isVerified()
+                      });
+                    }}
+                  />
+                )}
+              </section>
+            </section>
+          </main>
+        </div>
+      );
+    }
+  }
 }

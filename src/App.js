@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Login from "./components/Login";
-import Form from './components/Form'
+import Form from "./components/Form";
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,43 +10,25 @@ import {
 } from "react-router-dom";
 import { hasSignIn, isVerified } from "./firebase/FirebaseUitls";
 import Dashboard from "./components/Dashboard";
+import {NotVerified} from './components/Login'
 
 export default class App extends Component {
   render() {
     return (
       <div>
         <Router>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/home">Home</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <Link to="/admin">Admin</Link>
-              </li>
-              <li>
-                <Link to="/form">Form</Link>
-              </li>
-            </ul>
-          </nav>
           <Switch>
-            <Route path="/admin">
-              <div />
+            <Route exact path="/">
+              <Redirect to="/dash"></Redirect>
             </Route>
-            <Route path="/login">
+            <Route exact path="/login">
               <Login />
             </Route>
-            <Route path="/form">
-              <Form />
+            <Route exact path="/verify">
+              <NotVerified />
             </Route>
-            <Route path="/dash">
-              <Dashboard />
-            </Route>
-            <PrivateRoute path="/" />
-            <PrivateRoute path="/admin" />
+            <PrivateRoute exact path="/form" component={Form} />
+            <PrivateRoute path="/dash" component={Dashboard} />
           </Switch>
         </Router>
       </div>
@@ -54,5 +36,11 @@ export default class App extends Component {
   }
 }
 
-const PrivateRoute = () =>
-  (hasSignIn() && isVerified()) ? <Form /> : <Redirect to="/login" />;
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      hasSignIn() && isVerified() ? <Component /> : <Redirect to="/login" />
+    }
+  />
+);
