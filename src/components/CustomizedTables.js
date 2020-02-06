@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import '../popup.css';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -37,6 +38,11 @@ const useStyles = makeStyles({
   },
 });
 
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+
 export default function CustomizedTables(props) {
   const classes = useStyles();
   const rows = props.items;
@@ -65,7 +71,9 @@ export default function CustomizedTables(props) {
               <StyledTableCell align="right">{row.usn}</StyledTableCell>
               <StyledTableCell align="right">{row.category}</StyledTableCell>
               <StyledTableCell align="right">{row.subcategory}</StyledTableCell>
-              <StyledTableCell align="right">{row.message}</StyledTableCell>
+              <StyledTableCell align="right">{ <div class="popup" onclick="myFunction()">{row.message}
+          <span class="popuptext" id="myPopup">{row.message}</span>
+</div> }</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
