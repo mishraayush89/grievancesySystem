@@ -1,4 +1,5 @@
 import React from 'react';
+//mui stuff
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+//popup css
 import '../popup.css';
 
 const StyledTableCell = withStyles(theme => ({
@@ -27,9 +29,6 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-function createData(name, usn, category, subcategory, complaint) {
-  return {name, usn, category, subcategory, complaint};
-}
 
 
 const useStyles = makeStyles({

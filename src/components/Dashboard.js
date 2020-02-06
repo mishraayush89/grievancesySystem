@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { listAllGrievance, getItem } from "./../firebase/FirebaseUitls";
 import CustomizedTables from './CustomizedTables'; 
+import '../dashboard.css';
 
 export default class Dashboard extends Component {
   state = {
@@ -63,18 +64,19 @@ export default class Dashboard extends Component {
     const { items, hasMore } = this.state;
     return (
       <div>
-        <h2>Grievance</h2>
         <InfiniteScroll
-          dataLength={items.length}
-          next={this.fetchMoreData()}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: "center" }}>
+        className="infinite"
+        dataLength={items.length}
+        next={this.fetchMoreData()}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>
             </p>
           }
-        >
+          >
+          <h2>Grievance</h2>
          <CustomizedTables items={items}
            
          />
