@@ -63,7 +63,7 @@ export default function CustomizedTables(props) {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <StyledTableRow key={row.id}>
+            <StyledTableRow key={row.idgi}>
               <StyledTableCell component="th" scope="row">
                 {row.name}
               </StyledTableCell>
@@ -71,8 +71,8 @@ export default function CustomizedTables(props) {
               <StyledTableCell align="right">{row.usn}</StyledTableCell>
               <StyledTableCell align="right">{row.category}</StyledTableCell>
               <StyledTableCell align="right">{row.subcategory}</StyledTableCell>
-              <StyledTableCell align="right">{ <div class="popup" onclick="myFunction()">{row.message}
-          <span class="popuptext" id="myPopup">{row.message}</span>
+              <StyledTableCell align="right">{ <div className="popup" onClick="myFunction()">{row.message}
+          <span className="popuptext" id="myPopup">{row.message}</span>
 </div> }</StyledTableCell>
             </StyledTableRow>
           ))}
