@@ -59,19 +59,10 @@ export async function signIn(email, password) {
 }
 
 // returns promise without catching
-export async function signUp(username, email, password) {
+export async function signUp(email, password) {
   return firebase
     .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      if (firebase.auth().currentUser !== undefined) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(firebase.auth().uid)
-          .set({ username, admin: false });
-      }
-    });
+    .createUserWithEmailAndPassword(email, password);
 }
 
 export async function isAdmin() {

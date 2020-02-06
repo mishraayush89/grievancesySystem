@@ -30,21 +30,31 @@ function Signup(props) {
       onSubmit={async (values, { setSubmitting }) => {
         const error = {};
         setSubmitting(true);
-        if (!hasSignIn()) {
-          console.log(values.email, values.password);
-          await signUp(values.email, values.password)
-            .catch(function(err) {
-              var errorCode = err.code;
-              var errorMessage = err.message;
-            })
-            .then(() => {
-              if (!isVerified()) {
-                sendVerificationLink();
-                setSubmitting(false);
-                props.onSubmit();
+        console.log(values.email, values.password);
+        await signUp(values.email, values.password)
+          .then(() => {
+            if (!isVerified()) {
+              sendVerificationLink();
+              const username = values.username
+              if (
+                firebase.auth().currentUser !== undefined &&
+                firebase.auth().currentUser !== ""
+              ) {
+                firebase
+                  .firestore()
+                  .collection("users")
+                  .doc(firebase.auth().currentUser.uid)
+                  .set({ username, admin: false });
               }
-            });
-        }
+              setSubmitting(false);
+              props.onSubmit();
+            }
+          })
+          .catch(function(err) {
+            var errorCode = err.code;
+            var errorMessage = err.message;
+            alert(errorCode + " " + errorMessage);
+          });
       }}
     >
       {({
@@ -143,14 +153,14 @@ class Signin extends Component {
           const error = {};
           setSubmitting(true);
           signIn(values.email, values.password)
+            .then(() => {
+              this.props.onSubmit();
+            })
             .catch(function(err) {
               var errorCode = err.code;
               var errorMessage = err.message;
               // TODO: replace alert with state text
               alert(errorCode, errorMessage);
-            })
-            .then(() => {
-              this.props.onSubmit();
             });
         }}
       >
