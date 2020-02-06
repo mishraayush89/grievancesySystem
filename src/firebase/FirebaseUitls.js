@@ -74,11 +74,14 @@ export async function signUp(username, email, password) {
     });
 }
 
-export function isAdmin(){
-  firebase
-  .firestore()
-  .collection("users")
-  .doc(firebase.auth().uid)
+export async function isAdmin() {
+  const obj = await firebase
+    .firestore()
+    .collection("users")
+    .doc(firebase.auth().uid).get().data()
+    if(obj === undefined) return false
+    if(obj.admin ===  undefined) return false
+    return obj;
 }
 
 // returns boolean value

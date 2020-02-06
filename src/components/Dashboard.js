@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { listAllGrievance, getItem } from "./../firebase/FirebaseUitls";
+import { listAllGrievance, getItem, isAdmin } from "./../firebase/FirebaseUitls";
 import CustomizedTables from "./CustomizedTables";
 
 export default class Dashboard extends Component {
@@ -63,7 +63,8 @@ export default class Dashboard extends Component {
 
   render() {
     const { items, hasMore } = this.state;
-    return (
+    const rend = await isAdmin().then((res)=>{
+      return res ? <Link to="/form"/>: 
       <div>
         <h2>Grievance</h2>
         <InfiniteScroll
@@ -80,6 +81,8 @@ export default class Dashboard extends Component {
           <CustomizedTables items={items} />
         </InfiniteScroll>
       </div>
-    );
+    ;
+  })
+  return (rend);
   }
 }
