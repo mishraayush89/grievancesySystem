@@ -222,7 +222,7 @@ export class NotVerified extends Component {
   render() {
     const { loggedin, verified } = this.state;
     return !loggedin ? (
-      <Redirect to="/login"></Redirect>
+      <Redirect to="/login" />
     ) : (
       <div>
         You are not verified.
@@ -257,7 +257,7 @@ export default function Login() {
           <section className="form">
             <div className="top-signup">
               <button
-                className={signup ? "signup" : "signin"}
+                className={signup ? "signin0" : "signin"}
                 onClick={() => {
                   handleChange(false);
                 }}
