@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -8,6 +9,20 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import "../popup.css";
+=======
+import React from 'react';
+//mui stuff
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+//popup css
+import '../popup.css';
+>>>>>>> 9e7b3968a56499966ba413a9f2d16c0582d5d6f8
 
 const StyledTableCell = withStyles(theme => ({
   head: {

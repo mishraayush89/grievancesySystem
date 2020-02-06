@@ -66,14 +66,14 @@ export default class Dashboard extends Component {
     const rend = await isAdmin().then((res)=>{
       return res ? <Link to="/form"/>: 
       <div>
-        <h2>Grievance</h2>
         <InfiniteScroll
-          dataLength={items.length}
-          next={this.fetchMoreData()}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: "center" }}>
+        className="infinite"
+        dataLength={items.length}
+        next={this.fetchMoreData()}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>
             </p>
           }
