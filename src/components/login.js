@@ -7,9 +7,8 @@ import {
   sendVerificationLink,
   signUp,
   getEmail
-} from "./firebase/FirebaseUitls";
+} from "../firebase/FirebaseUitls";
 import "../App.css";
-import firebase from "@firebase/app";
 import { Redirect, Link } from "react-router-dom";
 
 function Signup() {

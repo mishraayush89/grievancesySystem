@@ -8,7 +8,8 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
-import { hasSignIn, isVerified } from "./components/firebase/FirebaseUitls";
+import { hasSignIn, isVerified } from "./firebase/FirebaseUitls";
+import Dashboard from "./components/Dashboard";
 
 export default class App extends Component {
   render() {
@@ -40,6 +41,9 @@ export default class App extends Component {
             </Route>
             <Route path="/form">
               <Form />
+            </Route>
+            <Route path="/dash">
+              <Dashboard />
             </Route>
             <PrivateRoute path="/" />
             <PrivateRoute path="/admin" />

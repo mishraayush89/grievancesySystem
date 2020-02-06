@@ -85,10 +85,7 @@ export function isVerified() {
 // returns promise without catch or check ie. it doesn't check if user is
 // already verified or not
 export function sendVerificationLink() {
-  return firebase
-    .auth()
-    .currentUser
-    .sendEmailVerification();
+  return firebase.auth().currentUser.sendEmailVerification();
 }
 
 // create grievance
@@ -120,9 +117,29 @@ export function signOut() {
 }
 
 // return on snapshot function
-export function listAllGrievance() {
-  return firebase
-    .firestore()
-    .collection("grievance")
-    .limit(200).onSnapshot;
+export function listAllGrievance(last) {
+  var ref = firebase.firestore().collection("grievance");
+  if (last === undefined || last["createdAt"] === undefined) return undefined;
+  else {
+    return ref
+      .orderBy("createdAt")
+      .limit(20)
+      .startAt(last["createdAt"])
+      .get();
+  }
+}
+
+async function getFirst() {
+  var ref = firebase.firestore().collection("grievance");
+  const doc = await ref
+    .orderBy("createdAt")
+    .limit(1)
+    .get();
+  return doc.docs[0].data();
+}
+
+export async function getItem() {
+  return await getFirst().then(val => {
+    return val;
+  });
 }

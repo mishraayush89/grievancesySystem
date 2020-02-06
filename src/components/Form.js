@@ -3,7 +3,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Formik } from "formik";
 import {
   createGrievance
-} from "./firebase/FirebaseUitls";
+} from "../firebase/FirebaseUitls";
 import "../Form.css";
 class Form extends Component {
   state = {};
