@@ -5,7 +5,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect
 } from "react-router-dom";
 import { hasSignIn, isVerified } from "./firebase/FirebaseUitls";
@@ -15,7 +14,7 @@ import {NotVerified} from './components/Login'
 export default class App extends Component {
   render() {
     return (
-      <div>
+      <div class="container">
         <Router>
           <Switch>
             <Route exact path="/">

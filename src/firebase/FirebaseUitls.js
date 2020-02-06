@@ -75,6 +75,8 @@ export async function signUp(username, email, password) {
 }
 
 export async function isAdmin() {
+  if(firebase.auth() === undefined) return false
+  if(firebase.auth().uid === undefined) return false
   const obj = await firebase
     .firestore()
     .collection("users")
@@ -138,10 +140,32 @@ export function signOut() {
 }
 
 // return on snapshot function
-export function listAllGrievance(last) {
+export function listAllGrievance(last, catfiter, scatfilter) {
   var ref = firebase.firestore().collection("grievance");
   if (last === undefined || last["createdAt"] === undefined) return undefined;
-  else {
+  else if(catfiter !== undefined && scatfilter !== undefined){
+    return ref
+    .orderBy("createdAt")
+    .where("category", catfiter)
+    .where("subcategory", scatfilter)
+    .limit(20)
+    .startAt(last["createdAt"])
+    .get();
+  }else if(catfiter != undefined){
+    return ref
+    .orderBy("createdAt")
+    .where("category", catfiter)
+    .limit(20)
+    .startAt(last["createdAt"])
+    .get();
+  }else if(scatfilter != undefined){
+    return ref
+    .orderBy("createdAt")
+    .limit(20)
+    .where("subcategory", scatfilter)
+    .startAt(last["createdAt"])
+    .get();
+  }else{
     return ref
       .orderBy("createdAt")
       .limit(20)

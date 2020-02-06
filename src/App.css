@@ -101,7 +101,6 @@ main {
 .signin {
   height: 100%;
   width: 50%;
-  border-radius: 20px 0 0 20px;
   background-color: rgba(255, 255, 255, 0.05);
   border: none;
   color: rgba(255, 255, 255, 0.25);
@@ -111,7 +110,6 @@ main {
 .signup {
   height: 100%;
   width: 50%;
-  border-radius: 0 20px 20px 0;
   font-size: 14px;
   border: none;
   background: linear-gradient(#6fe0ca, #4cb8af);

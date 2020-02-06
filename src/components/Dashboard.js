@@ -1,14 +1,28 @@
 import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { listAllGrievance, getItem, isAdmin } from "./../firebase/FirebaseUitls";
+import {
+  listAllGrievance,
+  getItem,
+  isAdmin
+} from "./../firebase/FirebaseUitls";
 import CustomizedTables from "./CustomizedTables";
+import { Link } from "react-router-dom";
 
 export default class Dashboard extends Component {
   state = {
     items: [],
     last: null,
-    hasMore: true
+    hasMore: true,
+    rend: ""
   };
+
+  constructor(props) {
+    super(props);
+    isAdmin().then(res => {
+      const obj = res ? <Link to="/form" /> : <></>;
+      this.setState({ rend: obj });
+    });
+  }
 
   fetchMoreData = async () => {
     if (this.state.items.length >= 500) {
@@ -62,27 +76,28 @@ export default class Dashboard extends Component {
   };
 
   render() {
+    const { rend } = this.state;
     const { items, hasMore } = this.state;
-    const rend = await isAdmin().then((res)=>{
-      return res ? <Link to="/form"/>: 
-      <div>
-        <InfiniteScroll
-        className="infinite"
-        dataLength={items.length}
-        next={this.fetchMoreData()}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
-        >
-          <CustomizedTables items={items} />
-        </InfiniteScroll>
-      </div>
-    ;
-  })
-  return (rend);
+    return (
+      <>
+        {rend}
+        <div>
+          <InfiniteScroll
+            className="infinite"
+            dataLength={items.length}
+            next={this.fetchMoreData()}
+            hasMore={hasMore}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+          >
+            <CustomizedTables items={items} />
+          </InfiniteScroll>
+        </div>
+      </>
+    );
   }
 }
