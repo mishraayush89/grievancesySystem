@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { listAllGrievance, getItem } from "./../firebase/FirebaseUitls";
-import CustomizedTables from './CustomizedTables'; 
+import CustomizedTables from "./CustomizedTables";
 
 export default class Dashboard extends Component {
   state = {
@@ -37,6 +37,8 @@ export default class Dashboard extends Component {
                 block.push(item.data());
               })
             );
+            if (block[block.length - 1] === undefined || last === undefined)
+              return;
             if (block[block.length - 1].createdAt !== last.createdAt) {
               this.setState({
                 items: items.concat(block),
@@ -75,9 +77,7 @@ export default class Dashboard extends Component {
             </p>
           }
         >
-         <CustomizedTables items={items}
-           
-         />
+          <CustomizedTables items={items} />
         </InfiniteScroll>
       </div>
     );

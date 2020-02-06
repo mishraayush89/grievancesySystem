@@ -74,6 +74,13 @@ export async function signUp(username, email, password) {
     });
 }
 
+export function isAdmin(){
+  firebase
+  .firestore()
+  .collection("users")
+  .doc(firebase.auth().uid)
+}
+
 // returns boolean value
 export function hasSignIn() {
   return firebase.auth().currentUser !== null;
