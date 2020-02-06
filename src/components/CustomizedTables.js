@@ -71,7 +71,7 @@ export default function CustomizedTables(props) {
               <StyledTableCell align="right">{row.usn}</StyledTableCell>
               <StyledTableCell align="right">{row.category}</StyledTableCell>
               <StyledTableCell align="right">{row.subcategory}</StyledTableCell>
-              <StyledTableCell align="right">{ <div className="popup" onClick="myFunction()">{row.message}
+              <StyledTableCell align="right">{ <div className="popup" onClick={myFunction}>{row.message}
           <span className="popuptext" id="myPopup">{row.message}</span>
 </div> }</StyledTableCell>
             </StyledTableRow>
