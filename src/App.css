@@ -11,11 +11,13 @@ body {
   width: 100%;
   background: #ffd;
   display: flex;
+  margin-bottom: auto;
   align-items: center;
   justify-content: center;
 }
 
 main {
+  padding: 25px 25px 30px 25px;
   background: white;
   height: 900px;
   width: 1200px;
@@ -24,7 +26,7 @@ main {
 }
 
 .left {
-  background: linear-gradient(#70e1cb, #fff);
+  background: #70e1cb;
   height: 100%;
   width: 50%;
   border-radius: 10px 0 0 10px;
@@ -48,6 +50,7 @@ main {
   background: linear-gradient(#394c63, #212d3d);
   height: 100%;
   width: 50%;
+  margin-bottom: 20px;
   border-radius: 0 10px 10px 0;
 }
 .rocket {
@@ -91,33 +94,37 @@ main {
   margin-left: auto;
   margin-top: 25px;
   margin-right: 25px;
-  border-radius: 50px;
+  border-radius: 0px 0 0 20px;
   display: flex;
   flex-direction: row;
 }
+
 .beer {
   height: 45px;
 }
+
 .signin {
   height: 100%;
   width: 50%;
-  border-radius: 20px 0 0 20px;
+  border-radius: 0px 0px 0px 0px;
   background-color: rgba(255, 255, 255, 0.05);
   border: none;
   color: rgba(255, 255, 255, 0.25);
   font-size: 14px;
   font-weight: 300;
 }
+
 .signup {
   height: 100%;
   width: 50%;
-  border-radius: 0 20px 20px 0;
+  border-radius: 0px 0px 0px 0px;
   font-size: 14px;
   border: none;
   background: linear-gradient(#6fe0ca, #4cb8af);
   color: whitesmoke;
   font-weight: 300;
 }
+
 .form {
   height: 55%;
   width: 80%;
